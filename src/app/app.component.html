@@ -3,7 +3,7 @@
   <div class="card-body">
     <ng-template #content let-modal>
       <div class="modal-header">
-        <h4 class="modal-title">Modal title</h4>
+        <h4 class="modal-title">Add User</h4>
         <button
           type="button"
           class="btn-close"
@@ -14,13 +14,68 @@
       <div class="modal-body">
         <form [formGroup]="formgroup">
           <div class="row">
-            <div class="form-group-col">
+            <div class="form-group col-2">
               <label for="title">Title</label>
-              <select name="title" id="title" formControlName="title">
+              <select
+                name="title"
+                id="title"
+                class="form-control"
+                formControlName="title"
+              >
+                <option value="">Select Title</option>
                 <option value="Mr">Mr</option>
                 <option value="Mrs">Mrs</option>
                 <option value="Miss">Miss</option>
               </select>
+            </div>
+            <div class="form-group col-5">
+              <label for="fname">First Name</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="firstName"
+                placeholder="First Name"
+              />
+            </div>
+
+            <div class="form-group col-5">
+              <label for="fname">Last Name</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="lastName"
+                placeholder="Last Name"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-5">
+              <label for="dob">Date Of Birth</label>
+              <input type="date" class="form-control" formControlName="dob" />
+            </div>
+            <div class="form-group col-5">
+              <label for="email">EmailID</label>
+              <input type="text" class="form-control" formControlName="email" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-5">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                formControlName="password"
+              />
+            </div>
+            <div class="form-group col-5">
+              <label for="cpassword">Confirm Password</label>
+              <input
+                type="password"
+                class="form-control"
+                formControlName="confirmPassword"
+              />
             </div>
           </div>
         </form>
@@ -38,7 +93,7 @@
       </button>
     </div>
     <div class="from-row">
-      <div class="from-group-col">
+      <div class="from-group col">
         <table class="table table-striped">
           <thead>
             <tr>
