@@ -3,17 +3,17 @@
   <div class="card-body">
     <ng-template #content let-modal>
       <div class="modal-header">
-        <h4 class="modal-title">Add User</h4>
+        <h4 class="modal-title">{{ modalTitle }}</h4>
         <button
           type="button"
           class="btn-close"
           aria-label="Close"
-          (click)="modal.dismiss('Cross click')"
+          (click)="modalClose()"
         ></button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="formgroup">
-          <div class="row">
+        <form [formGroup]="formgroup" (ngSubmit)="submitHandler()">
+          <div class="row mb-3">
             <div class="form-group col-2">
               <label for="title">Title</label>
               <select
@@ -21,12 +21,21 @@
                 id="title"
                 class="form-control"
                 formControlName="title"
+                [ngClass]="{
+                  'is-invalid': submitted && formgroup.controls['title'].errors
+                }"
               >
                 <option value="">Select Title</option>
                 <option value="Mr">Mr</option>
                 <option value="Mrs">Mrs</option>
                 <option value="Miss">Miss</option>
               </select>
+              <div
+                class="invalid-feedback"
+                *ngIf="submitted && formgroup.controls['title'].errors"
+              >
+                Title is required
+              </div>
             </div>
             <div class="form-group col-5">
               <label for="fname">First Name</label>
@@ -35,7 +44,18 @@
                 class="form-control"
                 formControlName="firstName"
                 placeholder="First Name"
+                [ngClass]="{
+                  'is-invalid':
+                    submitted && formgroup.controls['firstName'].errors
+                }"
               />
+
+              <div
+                class="invalid-feedback"
+                *ngIf="submitted && formgroup.controls['firstName'].errors"
+              >
+                FirstName is Required
+              </div>
             </div>
 
             <div class="form-group col-5">
@@ -45,29 +65,95 @@
                 class="form-control"
                 formControlName="lastName"
                 placeholder="Last Name"
+                [ngClass]="{
+                  'is-invalid':
+                    submitted && formgroup.controls['lastName'].errors
+                }"
               />
+              <div
+                class="invalid-feedback"
+                *ngIf="submitted && formgroup.controls['lastName'].errors?.['required']"
+              >
+                LastName is Required
+              </div>
             </div>
           </div>
 
-          <div class="row">
+          <div class="row mb-3">
             <div class="form-group col-5">
               <label for="dob">Date Of Birth</label>
-              <input type="date" class="form-control" formControlName="dob" />
+              <input
+                type="date"
+                class="form-control"
+                formControlName="dob"
+                [ngClass]="{
+                  'is-invalid':
+                    submitted && formgroup.controls['firstName'].errors
+                }"
+              />
+              <div
+                class="invalid-feedback"
+                *ngIf="submitted && formgroup.controls['dob'].errors"
+              >
+                <div *ngIf="formgroup.controls['dob'].errors?.['required']">
+                  Date Of Birth is Required
+                </div>
+                <div *ngIf="formgroup.controls['dob'].errors?.['pattern']">
+                  Date Of Birth is invalid
+                </div>
+              </div>
             </div>
             <div class="form-group col-5">
               <label for="email">EmailID</label>
-              <input type="text" class="form-control" formControlName="email" />
+              <input
+                type="text"
+                class="form-control"
+                formControlName="email"
+                [ngClass]="{
+                  'is-invalid': submitted && formgroup.controls['email'].errors
+                }"
+              />
+              <div
+                class="invalid-feedback"
+                *ngIf="submitted && formgroup.controls['email'].errors"
+              >
+                <div *ngIf="formgroup.controls['email'].errors?.['required']">
+                  Email is Required
+                </div>
+                <div *ngIf="formgroup.controls['email'].errors?.['email']">
+                  Email is Invalid
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="row">
+          <div class="row mb-3">
             <div class="form-group col-5">
               <label for="password">Password</label>
               <input
                 type="password"
                 class="form-control"
                 formControlName="password"
+                [ngClass]="{
+                  'is-invalid':
+                    submitted && formgroup.controls['password'].errors
+                }"
               />
+              <div
+                class="invalid-feedback"
+                *ngIf="submitted && formgroup.controls['email'].errors"
+              >
+                <div
+                  *ngIf="formgroup.controls['password'].errors?.['required']"
+                >
+                  Password is Required
+                </div>
+                <div
+                  *ngIf="formgroup.controls['password'].errors?.['minLength']"
+                >
+                  Password should be at least 8 characters
+                </div>
+              </div>
             </div>
             <div class="form-group col-5">
               <label for="cpassword">Confirm Password</label>
@@ -75,7 +161,63 @@
                 type="password"
                 class="form-control"
                 formControlName="confirmPassword"
+                [ngClass]="{
+                  'is-invalid':
+                    submitted && formgroup.controls['confirmPassword'].errors
+                }"
               />
+              <div
+                class="invalid-feedback"
+                *ngIf="formgroup.controls['confirmPassword'].errors"
+              >
+                <div
+                  *ngIf="submitted && 
+                    formgroup.controls['confirmPassword']?.errors?.['required']
+                  "
+                >
+                  Confirm Password is Required
+                </div>
+                <div
+                  *ngIf="
+                  formgroup.controls['confirmPassword']?.errors?.['mustMatch']
+                "
+                >
+                  Password and Confirm Password should be same
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="form-group col form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="acceptTerm"
+                formControlName="acceptTerm"
+                [ngClass]="{
+                  'is-invalid':
+                    submitted && formgroup.controls['acceptTerm'].errors
+                }"
+              />
+              <label for="acceptTerm" class="form-check-label">
+                Accept Terms and conditions</label
+              >
+              <div
+                class="invalid-feedback"
+                *ngIf="submitted && formgroup.controls['acceptTerm'].errors?.['required']"
+              >
+                Accept Terms and conditions is required True
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="form-group text-center">
+              <button class="btn btn-success me-3" cl>{{ btnName }}</button>
+              <button class="btn btn-danger" (click)="cancelHandler()">
+                Cancel
+              </button>
             </div>
           </div>
         </form>
@@ -92,7 +234,7 @@
         Add User
       </button>
     </div>
-    <div class="from-row">
+    <div class="from-row mb-3">
       <div class="from-group col">
         <table class="table table-striped">
           <thead>
