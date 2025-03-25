@@ -248,22 +248,22 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Mr</td>
-              <td>Ajeet</td>
-              <td>singh</td>
-              <td>DOB</td>
-              <td>10-08-1991</td>
+            <tr *ngFor="let user of userData">
+              <td>{{ user.title }}</td>
+              <td>{{ user.firstName }}</td>
+              <td>{{ user.lastName }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.dob }}</td>
               <td>
                 <i
-                  class="fa fa-edit me-3"
+                  class="fa fa-edit me-3 cursor-pointer"
                   style="color: green"
-                  (click)="edit(1)"
+                  (click)="edit(user.id)"
                 ></i>
                 <i
-                  class="fa fa-trash-o me-3"
+                  class="fa fa-trash-o me-3 cursor-pointer"
                   style="color: red"
-                  (click)="delete(1)"
+                  (click)="delete(user.id)"
                 ></i>
               </td>
             </tr>

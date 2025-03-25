@@ -7,6 +7,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { title } from 'node:process';
 import { Action } from './helpers/action.enum';
 import { mustMatch } from './helpers/must-match.validator';
+import { UserApiService } from './helpers/user-api.service';
+import { Users } from './helpers/users.interface';
 
 @Component({
   selector: 'app-root',
@@ -22,14 +24,16 @@ export class AppComponent implements OnInit {
   btnName:String = "";
   dbaction!:Action;
   modalTitle:String = "";
+  userData:Users[] = [];
 
-  constructor(private _toastr: ToastrService, private modalService: NgbModal,private formBuilder:FormBuilder) {
+  constructor(private _toastr: ToastrService, private modalService: NgbModal,private formBuilder:FormBuilder,private _userApiService:UserApiService) {
 
   }
 
   ngOnInit(): void {
     // Swal.fire("SweetAlert2 is working!");
     this.setFormState()
+    this.getAllUsers()
   }
 
   setFormState(){
@@ -57,10 +61,24 @@ export class AppComponent implements OnInit {
     this.btnName = "Update";
     this.modalTitle = "Update User";
     this.dbaction = Action.update;
+
+    let user = this.userData.find((u:Users) => u.id === id);
+    if(user){
+      this.formgroup.patchValue(user);
+      this.formgroup.get('password')?.setValue('');
+      this.formgroup.get('confirmPassword')?.setValue('');
+      this.formgroup.get('acceptTerm')?.setValue(false);
+    }else{
+      console.log("User ID not Found",id)
+    }
    this.modalRef = this.modalService.open(this.elcontent, { size: 'xl' });
   }
 
-
+  getAllUsers(){
+    this._userApiService.getUsers().subscribe((data:any) => {
+      this.userData = data
+    })
+  }
   modalClose(){
     this.btnName = "Save";
     this.modalTitle = "Add User";
@@ -87,13 +105,17 @@ export class AppComponent implements OnInit {
     switch(this.dbaction){
       case Action.create:
         //code to add user
-        this._toastr.success("User Added Successfully","Add User")
-        this.cancelHandler();
+        this._userApiService.addUser(this.formgroup.value).subscribe((res:any) => {
+          this._toastr.success("User Added Successfully","Add User")
+          this.cancelHandler();
+        })
         break;
       case Action.update:
         // code to update user
-        this._toastr.success("User Updated Successfully","Update User")
-        this.cancelHandler();
+        this._userApiService.updateUser(this.formgroup.value).subscribe((res:any) => {
+          this._toastr.success("User Updated Successfully","Update User")
+          this.cancelHandler();
+        })
         break;
     }
     this._toastr.success("User Added Successfully","Add User")
@@ -112,11 +134,14 @@ export class AppComponent implements OnInit {
    }).then((result) => {
     if(result.isConfirmed){
       //code here to delet the record
-      Swal.fire(
-        'Deleted!',
-        'Your file has been deleted.',
-        'success'
-      )
+      this._userApiService.deleteUser(id).subscribe((res:any) =>{
+        this.getAllUsers();
+        Swal.fire(
+          'Deleted!',
+          'User has been deleted.',
+          'success'
+        )
+      })
     }else{
       Swal.fire(
         'Cancelled',

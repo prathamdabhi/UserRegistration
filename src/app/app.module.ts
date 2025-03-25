@@ -6,6 +6,9 @@ import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
 import {  NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { DataService } from './helpers/data.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -17,10 +20,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     NgbModule,
-    ReactiveFormsModule
-    
-    
-    
+    ReactiveFormsModule,
+    HttpClientModule,
+    HttpClientInMemoryWebApiModule.forRoot(DataService)
   ],
   providers: [
     provideClientHydration(withEventReplay())
